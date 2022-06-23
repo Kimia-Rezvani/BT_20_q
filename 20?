@@ -1,0 +1,170 @@
+import sys
+COUNT = 0 #keeping count of questions
+
+
+
+class BinaryTreeNode() :
+    "Node objects have a question, and  left and right pointer to other Nodes"
+
+    def __init__(self, question, left=None, right=None):
+        self.question = question  #root node
+        self.left = left
+        self.right = right
+
+class TwentyQuestions():
+    def yes(question):
+        # returns True if the user answers 'yes' adds to left child
+        # returns False it's a no adds to right child
+        while True:
+            answer = input(question )
+            answer = answer[0:1].lower()
+            if answer == 'y':
+                return True
+            else:
+                return False
+
+
+
+    def guess_routine(knowledge):
+        global COUNT
+
+        while True:
+            print()
+            print("***Let's play! ***")
+            print("Think of creature...")
+            print()
+            while COUNT <= 20:
+                # Transverse/search the tree
+                current = knowledge
+                while current.left is not None:
+                    prompt = current.question
+                    if TwentyQuestions.yes(prompt):
+                        current= current.right
+                    else:
+                        current= current.left
+
+                # Checks if animal in tree
+                guess = current.question
+                prompt = f"Is this your creature:{current.question} (Y/N): "
+                if TwentyQuestions.yes(prompt):
+                    print("Excellent, thank you for playing!")
+                    print(f"You have guessed the animal in {COUNT} guesses!")
+                    sys.exit("Game Over")
+                    return False
+
+
+                # Ask the animal
+                prompt = "What is your creature? "
+                animal = input(prompt)
+                prompt = "Please enter a yes or no question that will distinguish a {0} from a {1}? "
+                question = input(prompt.format(animal, guess))
+
+                # Adds the animal to the tree
+                current.question = question
+                prompt = "For your creature {0} the answer would be? "
+                if TwentyQuestions.yes(prompt.format(animal, question)):
+                    current.left = BinaryTreeNode(guess)
+                    current.right = BinaryTreeNode(animal)
+                else:
+                    current.left = BinaryTreeNode(animal)
+                    current.right = BinaryTreeNode(guess)
+                print(f"Thank you, I have added {animal}")
+                COUNT +=1
+
+                return False
+
+
+
+
+def main():
+    global COUNT
+    print("***Let's play! ***")
+    animal = input("There are no creatures loaded, please tell me your creature. : ")
+    print("Thank you!  Now we can play.")
+    knowledge = BinaryTreeNode(animal) #creates node by first prompt
+    COUNT+=1 #starts the count
+    while True:
+        print("")
+        TwentyQuestions.guess_routine(knowledge)  #calls the guess routine function to build game
+
+
+if __name__ == "__main__": main()
+
+
+"""
+TEST RUN
+***Let's play! ***
+There are no creatures loaded, please tell me your creature. : pig
+Thank you!  Now we can play.
+
+
+***Let's play! ***
+Think of creature...
+Is this your creature:pig (Y/N): n
+What is your creature? cat
+Please enter a yes or no question that will distinguish a cat from a pig? Does it oink?
+For your creature cat the answer would be? No
+Thank you, I have added cat
+
+
+***Let's play! ***
+Think of creature...
+Does it oink?No
+Is this your creature:cat (Y/N): N
+What is your creature? bird
+Please enter a yes or no question that will distinguish a bird from a cat? Does it have feathers?
+For your creature bird the answer would be? Yes
+Thank you, I have added bird
+
+
+***Let's play! ***
+Think of creature...
+Does it oink?No
+Does it have feathers?No
+Is this your creature:cat (Y/N): No
+What is your creature? Dog
+Please enter a yes or no question that will distinguish a Dog from a cat? Does it meow?
+For your creature Dog the answer would be? No
+Thank you, I have added Dog
+
+
+***Let's play! ***
+Think of creature...
+Does it oink?no
+Does it have feathers?no
+Does it meow?no
+Is this your creature:Dog (Y/N): no
+What is your creature? skunk
+Please enter a yes or no question that will distinguish a skunk from a Dog? Does it have a horrible smell?
+For your creature skunk the answer would be? yes
+Thank you, I have added skunk
+
+
+***Let's play! ***
+Think of creature...
+Does it oink?no
+Does it have feathers?no
+Does it meow?no
+Does it have a horrible smell?no
+Is this your creature:Dog (Y/N): no
+What is your creature? snake
+Please enter a yes or no question that will distinguish a snake from a Dog? Does it have four legs?
+For your creature snake the answer would be? No
+Thank you, I have added snake
+
+
+***Let's play! ***
+Think of creature...
+Does it oink?no
+Does it have feathers?no
+Does it meow?no
+Does it have a horrible smell?no
+Does it have four legs?no
+Is this your creature:snake (Y/N): yes
+Excellent, thank you for playing!
+You have guessed the animal in 6 guesses!
+Game Over
+
+
+
+"""
